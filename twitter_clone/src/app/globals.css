@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+.link {
+  @apply flex items-center text-white cursor-pointer rounded-[30px] 
+  px-5 py-3 mb-2.5 font-bold text-[18px]
+  transition-colors duration-200 hover:bg-[#e8f5fe]
+   hover:text-[#50b7f5] 
+   [@media(max-height:450px)]:text-[18px];
+}
