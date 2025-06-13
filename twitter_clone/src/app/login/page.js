@@ -1,4 +1,33 @@
 "use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function LoginPage() {
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+    // Implement authentication logic here (e.g., NextAuth, JWT)
+    // For now, just a placeholder
+    router.push("/");
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input placeholder="Email" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
+      <input placeholder="Password" type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required />
+      <button type="submit">Login</button>
+      {error && <div>{error}</div>}
+    </form>
+  );
+}
+
+
+
+/*"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -22,7 +51,7 @@ export default function LoginPage() {
     }
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -93,3 +122,4 @@ export default function LoginPage() {
     </main>
   );
 }
+*/

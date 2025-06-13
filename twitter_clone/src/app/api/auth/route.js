@@ -4,7 +4,7 @@ import User from "@/models/User";
 
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || 'super-cool-authentic-secret';
+const JWT_SECRET = process.env.JWT_SECRET || 'super-cool-secret';
 
 export async function POST(request) {
   await makeSureDbIsReady;

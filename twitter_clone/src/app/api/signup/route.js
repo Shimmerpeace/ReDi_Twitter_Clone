@@ -1,3 +1,23 @@
+
+import { makeSureDbIsReady } from "@/lib/dataBase";
+import User from "@/models/User";
+import { hashPassword } from "@/lib/auth";
+
+export default async function handler(req, res) {
+  if (req.method !== "POST") return res.status(405).end();
+  await makeSureDbIsReady();
+
+  const { username, email, password, name } = req.body;
+  if (!username || !email || !password) return res.status(400).json({ error: "Missing fields" });
+
+  const exists = await User.findOne({ $or: [{ username }, { email }] });
+  if (exists) return res.status(409).json({ error: "User already exists" });
+
+  const passwordHash = await hashPassword(password);
+  const user = await User.create({ username, email, passwordHash, name });
+  res.status(201).json({ id: user._id, username: user.username, name: user.name });
+}
+/*
 // app/api/auth/register/route.js
 // jsonwebtoken for JWT
 // bcryptjs for password hashing
@@ -82,3 +102,4 @@ export async function POST(request) {
 export function GET() {
   return NextResponse.json({ error: "Method Not Allowed" }, { status: 405 });
 }
+*/

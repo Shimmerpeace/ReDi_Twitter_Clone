@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import connectDB from "../../../lib/mongodb";
-import User from "../../../models/User";
+import { makeSureDbIsReady } from "@/lib/dataBase";
+import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
 export default NextAuth({
@@ -10,10 +10,11 @@ export default NextAuth({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "text" },
+        username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        await connectDB();
+        await makeSureDbIsReady();
         const user = await User.findOne({ email: credentials.email }).select("+password");
         if (!user) throw new Error("Invalid email or password");
         const isValid = await bcrypt.compare(credentials.password, user.password);

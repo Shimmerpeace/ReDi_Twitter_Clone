@@ -1,10 +1,7 @@
 import Sidebar from "../components/Sidebar";
 import FollowBar from "../components/FollowBar";
-//import TweetCard from "./tweetCard/route";
-
-import Note from "./note/page";
 import NewTweet from "./newTweet/page"
-import Header from "@/components/Header";
+//import Header from "@/components/Header";
 import TweetsList from "@/app/tweet/page"
 
 function Home() {
@@ -15,10 +12,12 @@ function Home() {
          
           <Sidebar />
           <div className="col-span-3 lg:col-span-2 border-x-[1px] border-neutral-800">
-          <Header />
-            <Note />
+          
+           
             <NewTweet />
             <TweetsList />
+           
+            
           </div>
           <FollowBar />
         </div>
@@ -28,3 +27,4 @@ function Home() {
 }
 
 export default Home;
+//<Header />

@@ -15,6 +15,7 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       maxlength: 30,
       unique: true,
+      required: true,
     },
     email: {
       type: String,
@@ -22,6 +23,7 @@ const UserSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      match: [/.+\@.+\..+/, "Please enter a valid email address"],
     },
     emailVerified: {
       type: Date,
@@ -41,11 +43,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    /*    createdAt: {
-      type: Date,
-      default: Date.now,
+     avatar: {
+      type: String,
+      default: "",
     },
-    */
+    
     followers: [
       {
         type: mongoose.Schema.Types.ObjectId,

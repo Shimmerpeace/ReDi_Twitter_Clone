@@ -1,3 +1,25 @@
+
+import { makeSureDbIsReady } from "@/lib/dataBase";
+import User from "@/models/User";
+
+import { verifyPassword, signJwt } from "@/lib/auth";
+
+export default async function handler(req, res) {
+  if (req.method !== "POST") return res.status(405).end();
+  await makeSureDbIsReady();
+
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(401).json({ error: "Invalid credentials" });
+
+  const valid = await verifyPassword(password, user.passwordHash);
+  if (!valid) return res.status(401).json({ error: "Invalid credentials" });
+
+  const token = signJwt(user);
+  res.status(200).json({ token, user: { id: user._id, username: user.username, name: user.name } });
+}
+
+/*
 // app/api/auth/login/route.js
 // jsonwebtoken for JWT
 // bcryptjs for password hashing
