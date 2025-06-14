@@ -1,4 +1,3 @@
-
 import { makeSureDbIsReady } from "@/lib/dataBase";
 import User from "@/models/User";
 import { hashPassword } from "@/lib/auth";
@@ -7,15 +6,35 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
   await makeSureDbIsReady();
 
-  const { username, email, password, name } = req.body;
-  if (!username || !email || !password) return res.status(400).json({ error: "Missing fields" });
+  try {
+    let { name, username, email, password } = req.body;
+    if (!name || !username || !email || !password)
+      return res.status(400).json({ error: "Missing fields" });
 
-  const exists = await User.findOne({ $or: [{ username }, { email }] });
-  if (exists) return res.status(409).json({ error: "User already exists" });
+    email = email.trim().toLowerCase();
+    username = username.trim();
 
-  const passwordHash = await hashPassword(password);
-  const user = await User.create({ username, email, passwordHash, name });
-  res.status(201).json({ id: user._id, username: user.username, name: user.name });
+    // Password strength check (simple example)
+    if (password.length < 8)
+      return res.status(400).json({ error: "Password too short" });
+
+    const exists = await User.findOne({ $or: [{ username }, { email }] });
+    if (exists) return res.status(409).json({ error: "User already exists" });
+
+    const hashedPassword = await hashPassword(password);
+    const user = await User.create({ username, email, hashedPassword, name });
+    res
+      .status(201)
+      .json({
+        id: user._id,
+        username: user.username,
+        name: user.name,
+        email: user.email,
+      });
+  } catch (error) {
+    console.log("Registration error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
 }
 /*
 // app/api/auth/register/route.js

@@ -1,4 +1,3 @@
-
 import { makeSureDbIsReady } from "@/lib/dataBase";
 import User from "@/models/User";
 
@@ -8,15 +7,30 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
   await makeSureDbIsReady();
 
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(401).json({ error: "Invalid credentials" });
+  try {
+    let { email, password } = req.body;
+    email = email.trim().toLowerCase();
 
-  const valid = await verifyPassword(password, user.passwordHash);
-  if (!valid) return res.status(401).json({ error: "Invalid credentials" });
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
-  const token = signJwt(user);
-  res.status(200).json({ token, user: { id: user._id, username: user.username, name: user.name } });
+    const valid = await verifyPassword(password, user.hashedPassword);
+    if (!valid) return res.status(401).json({ error: "Invalid credentials" });
+
+    const token = signJwt(user);
+    res.status(200).json({
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
 }
 
 /*
@@ -64,7 +78,7 @@ export async function POST(request) {
 
     // Validate password (implement your own comparePassword logic)
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    // const isPasswordValid = await verifyPassword(password, user.passwordHash);
+    // const isPasswordValid = await verifyPassword(password, user.hashedPassword);
     if (!isPasswordValid) {
       return NextResponse.json(
         { error: "Invalid credentials." },
