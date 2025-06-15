@@ -1,5 +1,4 @@
 // API Route (Express/Next.js API Route style)
-
 // app/api/auth/login/route.js (API Route style)
 import { makeSureDbIsReady } from "@/lib/dataBase";
 import User from "@/models/User";
