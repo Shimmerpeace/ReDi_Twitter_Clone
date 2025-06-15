@@ -1,54 +1,4 @@
-// API Route (Express/Next.js API Route style)
-// app/api/auth/login/route.js (API Route style)
-import { makeSureDbIsReady } from "@/lib/dataBase";
-import User from "@/models/User";
-import { verifyPassword, signJwt } from "@/lib/useAuth";
-
-export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).end();
-  await makeSureDbIsReady();
-
-  try {
-    let { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: "Missing credentials." });
-    }
-    email = email.trim().toLowerCase();
-
-    // Always select the hashed password field
-    const user = await User.findOne({ email }).select("+hashedPassword");
-    if (!user || !user.hashedPassword) {
-      return res.status(401).json({ error: "Invalid credentials." });
-    }
-
-    const valid = await verifyPassword(password, user.hashedPassword);
-    if (!valid) {
-      return res.status(401).json({ error: "Invalid credentials." });
-    }
-
-    const token = signJwt(user);
-
-    res.status(200).json({
-      token,
-      user: {
-        id: user._id.toString(),
-        username: user.username,
-        name: user.name,
-        email: user.email,
-      },
-    });
-  } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ error: "Server error" });
-  }
-}
-
-/*
-// app/api/auth/login/route.js
-// jsonwebtoken for JWT
-// bcryptjs for password hashing
-
-// app/api/auth/login/route.js (Next.js App Router style)
+// app/api/auth/login/route.js (Next.js API Route)
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { makeSureDbIsReady } from "@/lib/dataBase";
@@ -78,7 +28,7 @@ export async function POST(request) {
     }
 
     // Validate password
-    const isPasswordValid = await verifyPassword(password, user.hashedPassword);
+    const isPasswordValid = await verifyPassword(password, user.password);
     if (!isPasswordValid) {
       return NextResponse.json(
         { error: "Invalid credentials." },
@@ -117,6 +67,54 @@ export async function POST(request) {
   }
 }
 
+
+/*
+
+// API Route (Express/Next.js API Route style)
+// app/api/auth/login/route.js (traditional API handler e.g., pages/api/login.js)
+import { makeSureDbIsReady } from "@/lib/dataBase";
+import User from "@/models/User";
+import { verifyPassword, signJwt } from "@/lib/useAuth";
+
+export default async function handler(req, res) {
+  if (req.method !== "POST") return res.status(405).end();
+  await makeSureDbIsReady();
+
+  try {
+    let { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: "Missing credentials." });
+    }
+    email = email.trim().toLowerCase();
+
+    // Always select the hashed password field
+    const user = await User.findOne({ email }).select("+password");
+    if (!user || !user.password) {
+      return res.status(401).json({ error: "Invalid credentials." });
+    }
+
+    const valid = await verifyPassword(password, user.password);
+    if (!valid) {
+      return res.status(401).json({ error: "Invalid credentials." });
+    }
+
+    const token = signJwt(user);
+
+    res.status(200).json({
+      token,
+      user: {
+        id: user._id.toString(),
+        username: user.username,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+}
+  
 
 /**
  * Password Hashing: Never store plain passwords! Use bcrypt to hash and compare.

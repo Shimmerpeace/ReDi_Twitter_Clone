@@ -2,21 +2,26 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function RegisterPage() {
-  const [form, setForm] = useState({ username: "", name: "", email: "", password: "" });
+export default function SignUpPage() {
+  const [form, setForm] = useState({
+    username: "",
+    name: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
   const router = useRouter();
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
-    const res = await fetch("/api/user", {
+    const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
     if (res.ok) {
-      router.push("/login");
+      router.push("/auth/login");
     } else {
       const data = await res.json();
       setError(data.error || "Registration failed");
@@ -25,16 +30,36 @@ export default function RegisterPage() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input placeholder="Username" value={form.username} onChange={e => setForm({ ...form, username: e.target.value })} required />
-      <input placeholder="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
-      <input placeholder="Email" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
-      <input placeholder="Password" type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required />
+      <input
+        placeholder="Name"
+        value={form.name}
+        onChange={(e) => setForm({ ...form, name: e.target.value })}
+      />
+      <input
+        placeholder="Username"
+        value={form.username}
+        onChange={(e) => setForm({ ...form, username: e.target.value })}
+        required
+      />
+      <input
+        placeholder="Email"
+        type="email"
+        value={form.email}
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
+        required
+      />
+      <input
+        placeholder="Password"
+        type="password"
+        value={form.password}
+        onChange={(e) => setForm({ ...form, password: e.target.value })}
+        required
+      />
       <button type="submit">Register</button>
       {error && <div>{error}</div>}
     </form>
   );
 }
-
 
 /*
 
@@ -57,7 +82,7 @@ export default function SignupPage() {
     setError("");
     setSuccess("");
     try {
-      const res = await fetch("/api/signup", {
+      const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, username, email, password }),
@@ -67,17 +92,12 @@ export default function SignupPage() {
 
 */
 
-
-        /* Save the token for direct frontend use
+/* Save the token for direct frontend use
       if (data.token) {
         localStorage.setItem('token', data.token);
       } */
 
-
-
-
-
-        /*
+/*
         setSuccess("Registration successful! You can now log in.");
         setEmail("");
         setPassword("");

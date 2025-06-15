@@ -1,6 +1,7 @@
 // Authentication helpers
 // Contains reusable authentication logic, configuration, or helper functions for authentication and session management
-
+// jsonwebtoken for JWT
+// bcryptjs for password hashing
 // /lib/auth.js
 
 import bcrypt from "bcryptjs";
