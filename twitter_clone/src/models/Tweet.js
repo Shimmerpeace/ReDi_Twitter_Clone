@@ -1,3 +1,4 @@
+//models/Tweet
 import mongoose from "mongoose";
 
 const TweetSchema = new mongoose.Schema({
@@ -5,7 +6,7 @@ const TweetSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  tweetContent: {
+  content: {
     type: String,
     required: true,
   },

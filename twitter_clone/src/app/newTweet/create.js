@@ -8,7 +8,7 @@ export function CreateTweet() {
       <input
         className="input"
         type="text"
-        name="user"
+        name="twitterUser"
         defaultValue="user"
       />
       <input
@@ -25,7 +25,7 @@ export function CreateTweet() {
 const submit = async (e) => {
   e.preventDefault();
   const data = new FormData(e.target);
-  const twitterUser = data.get("user");
+  const twitterUser = data.get("twitterUser");
   const content = data.get("content");
  
 
@@ -34,7 +34,7 @@ const submit = async (e) => {
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify({ twitterUser, content }),
+    body: JSON.stringify({ twitterUser, content, likes, dislikes }),
   });
   const result = await response.json();
   console.log(result);

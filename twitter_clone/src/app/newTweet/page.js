@@ -19,7 +19,9 @@ export default async function NewTweet() {
           <span>{tweet.twitterUser}</span>
           <span>Content</span>
           <span>{tweet.content}</span>
+          <span>Likes</span>
           <span>{tweet.likes}</span>
+          <span>Dislikes</span>
           <span>{tweet.dislikes}</span>
         </div>
       ))}

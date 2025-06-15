@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { makeSureDbIsReady } from "@/lib/dataBase.js";
 import { Company } from "@/models/company.js";
 

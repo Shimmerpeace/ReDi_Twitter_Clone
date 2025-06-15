@@ -2,7 +2,7 @@
 // Contains reusable authentication logic, configuration, or helper functions for authentication and session management
 // jsonwebtoken for JWT
 // bcryptjs for password hashing
-// /lib/auth.js
+// /lib/useAuth.js
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -65,6 +65,9 @@ export function verifyJwt(token) {
   }
 }
 
+export function getUserFromToken(token) {
+  return verifyJwt(token);
+}
 
 /*
 import bcrypt from "bcryptjs";
