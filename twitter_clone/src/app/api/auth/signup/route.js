@@ -1,6 +1,4 @@
-
 // app/api/auth/signup/route.js (Next.js API Route/App Router Route)
-
 import { NextResponse } from "next/server";
 import { makeSureDbIsReady } from "@/lib/dataBase";
 import User from "@/models/User";
