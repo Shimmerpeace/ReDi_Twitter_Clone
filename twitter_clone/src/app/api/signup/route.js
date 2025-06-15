@@ -23,14 +23,12 @@ export default async function handler(req, res) {
 
     const hashedPassword = await hashPassword(password);
     const user = await User.create({ username, email, hashedPassword, name });
-    res
-      .status(201)
-      .json({
-        id: user._id,
-        username: user.username,
-        name: user.name,
-        email: user.email,
-      });
+    res.status(201).json({
+      id: user._id,
+      username: user.username,
+      name: user.name,
+      email: user.email,
+    });
   } catch (error) {
     console.log("Registration error:", error);
     res.status(500).json({ error: "Server error" });

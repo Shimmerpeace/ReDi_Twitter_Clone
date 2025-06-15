@@ -1,3 +1,4 @@
+// API route that processes authentication requests and returns responses.
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { makeSureDbIsReady } from "@/lib/dataBase";

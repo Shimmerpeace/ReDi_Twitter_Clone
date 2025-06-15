@@ -1,3 +1,4 @@
+// API route that processes authentication requests and returns responses.
 'use client'
 import { makeSureDbIsReady } from "@/lib/dataBase";
 import User from "@/models/User";
