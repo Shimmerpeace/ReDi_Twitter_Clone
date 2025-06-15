@@ -18,9 +18,9 @@ export default function Sidebar() {
       <Link href="#" className="link" >More</Link>
 
 
-      <Link href="/(modal)/user/profile">Open My Profile Modal</Link>
+      <Link href="/(modal)/user/profile" className="link" >Open My Profile Modal</Link>
 
-<Link href="/(modal)/user/profile/1234567890">Open User 1234567890 Profile Modal</Link>
+<Link href="/(modal)/user/profile/1234567890" className="link" >Open User 1234567890 Profile Modal</Link>
      
     </div>
   );

@@ -1,6 +1,6 @@
 import { makeSureDbIsReady } from "@/lib/dataBase";
 import User from "@/models/User";
-import { hashPassword } from "@/lib/auth";
+import { hashPassword } from "@/lib/useAuth";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
@@ -120,3 +120,4 @@ export function GET() {
   return NextResponse.json({ error: "Method Not Allowed" }, { status: 405 });
 }
 */
+ 

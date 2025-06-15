@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import { makeSureDbIsReady } from "@/lib/dataBase";
 import User from "@/models/User";
-import { hashPassword, verifyJwt } from "@/lib/auth";
+import { hashPassword, verifyJwt } from "@/lib/useAuth";
 
 // Helper validation functions
 function isValidUsername(username) {

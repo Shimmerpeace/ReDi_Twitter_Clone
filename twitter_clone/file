@@ -85,7 +85,56 @@ export default function Login() {
 
 
 
-
+my-twitter-clone/
+├── app/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── favicon.ico
+│   ├── api/
+│   │   └── auth/
+│   │       └── [...nextauth]/
+│   │           └── route.js
+│   ├── auth/
+│   │   ├── login/
+│   │   │   └── page.tsx
+│   │   ├── register/
+│   │   │   └── page.tsx
+│   ├── feed/
+│   │   └── page.tsx
+│   ├── profile/
+│   │   └── [username]/
+│   │       └── page.tsx
+│   ├── tweet/
+│   │   └── [id]/
+│   │       └── page.tsx
+├── components/
+│   ├── Header.tsx
+│   ├── Footer.tsx
+│   ├── Tweet.tsx
+│   ├── TweetInput.tsx
+│   └── UI/
+│       ├── Button.tsx
+│       └── Input.tsx
+├── context/
+│   └── AuthContext.tsx
+├── hooks/
+│   └── useAuth.ts
+├── services/
+│   ├── apiService.ts
+│   └── tweetService.ts
+├── utils/
+│   ├── fetcher.ts
+│   └── constants.ts
+├── public/
+│   └── images/
+│       └── logo.png
+├── styles/
+│   ├── globals.css
+│   └── Home.module.css
+├── .env
+├── next.config.js
+├── package.json
+├── tsconfig.json
 
 
 
@@ -286,3 +335,151 @@ Twitter clone, following patterns seen in open-source projects
 and tutorials. You will need to adjust the DB logic and 
 authentication providers according to your stack and 
 requirements.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Certainly! Your goal is to align your NextAuth credentials logic with the stricter and more complete logic you have in your /api/signup/route.js and /api/login/route.js endpoints.
+There are a few key differences and issues in your current NextAuth implementation:
+
+Password field name mismatch:
+
+In your user model, you save the password as hashedPassword, but in NextAuth you try to compare with user.password.
+
+User lookup:
+
+Your signup endpoint allows login via username or email, but NextAuth only checks email.
+
+Error handling and field checks:
+
+Your endpoints are more robust in checking missing fields, trimming, and normalizing input.
+
+Returned user object:
+
+Should be consistent and include all needed fields.
+
+Improved /app/api/auth/[...nextauth]/route.js
+Below is an improved version that mirrors your endpoint logic and fixes the above issues.
+Assumptions:
+
+You use hashedPassword in your user model.
+
+You want to allow login via email or username.
+
+You want to normalize/trim input.
+
+You want to return id, email, username, and name in the session.
+
+js
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { makeSureDbIsReady } from "@/lib/dataBase";
+import User from "@/models/User";
+import { verifyPassword } from "@/lib/useAuth"; // Use your own verifyPassword (bcrypt compare)
+
+export default NextAuth({
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        emailOrUsername: { label: "Email or Username", type: "text" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        await makeSureDbIsReady();
+
+        let { emailOrUsername, password } = credentials;
+
+        // Normalize input
+        if (!emailOrUsername || !password) {
+          throw new Error("Missing credentials");
+        }
+        emailOrUsername = emailOrUsername.trim();
+
+        // Find user by email or username
+        const user = await User.findOne({
+          $or: [
+            { email: emailOrUsername.toLowerCase() },
+            { username: emailOrUsername }
+          ]
+        }).select("+hashedPassword +email +username +name");
+
+        if (!user) {
+          throw new Error("Invalid credentials");
+        }
+
+        // Compare password
+        const valid = await verifyPassword(password, user.hashedPassword);
+        if (!valid) {
+          throw new Error("Invalid credentials");
+        }
+
+        // Return user object for session
+        return {
+          id: user._id.toString(),
+          email: user.email,
+          username: user.username,
+          name: user.name
+        };
+      }
+    })
+  ],
+  session: { strategy: "jwt" },
+  pages: { signIn: "/login" },
+  secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.username = user.username;
+        token.name = user.name;
+        token.email = user.email;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.username = token.username;
+        session.user.name = token.name;
+        session.user.email = token.email;
+      }
+      return session;
+    }
+  }
+});
+Key Points
+Login by email or username: User can enter either field.
+
+Password check uses hashedPassword: Consistent with your model.
+
+Input normalization: Trims and lowercases email.
+
+Session and JWT callbacks: Ensures all user fields are available in session.
+
+Error messages: Consistent with your /api/login endpoint.
+
+Action Items
+Make sure your login form sends emailOrUsername (not just email).
+
+Ensure your verifyPassword function matches your hashing method.
+
+If you want to restrict login to email only, change the $or query to just { email: emailOrUsername.toLowerCase() }.
+
+Let me know if you need the signup or login endpoints refactored as well, or if you want to support additional fields!
+

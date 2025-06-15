@@ -8,11 +8,11 @@ import jwt from "jsonwebtoken";
 
 // Stronger salt rounds for bcrypt
 const BCRYPT_SALT_ROUNDS = 12;
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || "super-cool-secret"; // Use only environment variable for JWT secret in production
 const JWT_EXPIRES_IN = "7d"; // easily changeable
 
 if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET environment variable is not set");
+  throw new Error("JWT_SECRET environment variable is not set.");
 }
 
 // Password hashing with error handling
@@ -43,13 +43,13 @@ export function signJwt(user) {
   try {
     // You can add more fields as needed (e.g., email, roles)
     const payload = {
-      id: user._id,
+      id: user._id.toString(),
       username: user.username,
       email: user.email,
     };
     return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-  } catch (err) {
-    console.error("Error signing JWT:", err);
+  } catch (error) {
+    console.error("Error signing JWT:", error);
     throw new Error("Failed to sign JWT");
   }
 }

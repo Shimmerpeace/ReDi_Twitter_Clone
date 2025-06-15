@@ -1,4 +1,5 @@
 // API route that processes authentication requests and returns responses.
+//auth/route.js
 'use client'
 import { makeSureDbIsReady } from "@/lib/dataBase";
 import User from "@/models/User";
