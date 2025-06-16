@@ -93,14 +93,15 @@ export async function GET(request) {
       if (!user) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
-      result = user;
+      // Wrap in array for consistency
+  return NextResponse.json({ users: [user] }, { status: 200 });
     } else {
       // All users (limit for safety)
       const users = await User.find({})
         .select("username name bio image followers following")
         .limit(50)
         .lean();
-      result = users;
+        return NextResponse.json({ users }, { status: 200 });
     }
 
     return NextResponse.json(result, { status: 200 });

@@ -28,7 +28,7 @@ export default function TweetsList({ twitterUser, content }) {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [twitterUser, content ]);
+  }, [twitterUser, content]);
 
   const fetchTweetsFromDb = async () => {
     try {

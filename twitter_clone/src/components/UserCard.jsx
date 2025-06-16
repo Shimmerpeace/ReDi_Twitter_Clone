@@ -1,9 +1,11 @@
 // User profile component
-// /components/UserProfile.jsx
+// /components/UserCard.jsx
 import Link from "next/link";
 import Image from "next/image";
 
 export default function UserCard({ user }) {
+  if (!user) return null; // or a loading spinner
+
   return (
     <Link
       href={`/user/profile/${user._id}`}
@@ -21,9 +23,9 @@ export default function UserCard({ user }) {
       <h2>@{user.username}</h2>
       <h3>{user.name}</h3>
       <p>{user.bio}</p>
-      <p>Followers: {user.followers.length}</p>
-      <p>Following: {user.following.length}</p>
-      </Link>
+      <p>Followers: {user.followers?.length ?? 0}</p>
+      <p>Following: {user.following?.length ?? 0}</p>
+    </Link>
   );
 }
 //<Link href={`/users/${user.username}`}>

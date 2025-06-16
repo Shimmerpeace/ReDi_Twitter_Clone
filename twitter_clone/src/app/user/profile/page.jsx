@@ -3,15 +3,26 @@
 //app/user/profile/page.jsx
 
 import Link from "next/link";
+import { cookies, headers } from "next/headers";
 
 async function getUser() {
-  const res = await fetch("/api/user/profile", { cache: "no-store" });
+  const host = headers().get("host");
+  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+  const cookie = cookies().toString(); // Get cookies as string
+
+  const res = await fetch(`${protocol}://${host}/api/user/profile`, {
+    cache: "no-store",
+    headers: {
+      cookie, // Forward cookies
+    },
+  });
+
   if (!res.ok) throw new Error("Failed to fetch users");
   return res.json();
 }
 
 export default async function UsersPage() {
-  const  { users } = await getUser();
+  const { users } = await getUser();
 
   return (
     <div>
