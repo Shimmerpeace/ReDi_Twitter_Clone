@@ -16,14 +16,16 @@ function getUserFromRequest(request) {
 }
 
 // GET: Fetch all tweets (public)
-export async function GET(req) {
+export async function GET() {
   await makeSureDbIsReady();
   try {
     const tweets = await Tweet.find({}).sort({ createdAt: -1 });
     return NextResponse.json({ tweets }, { status: 200 });
   } catch (error) {
     console.error("Error fetching tweets:", error);
-    return NextResponse.json({ error: "Failed to fetch tweets" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch tweets" }, 
+      { status: 500 });
   }
 }
 
@@ -82,7 +84,7 @@ export async function POST(request) {
     }
     const { twitterUser, content, likes, dislikes } = await request.json();
     // Basic validation
-    if (!tweetContent) {
+    if (!content) {
       return NextResponse.json(
         { success: false, error: "Tweet content is required" },
         { status: 400 }

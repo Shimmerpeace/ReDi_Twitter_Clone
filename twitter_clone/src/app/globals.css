@@ -7,3 +7,6 @@
    hover:text-[#50b7f5] 
    [@media(max-height:450px)]:text-[18px];
 }
+body {
+  @apply h-screen bg-[linear-gradient(90deg,_#020024_0%,_#090979_15%,_#00d4ff_100%)];
+}

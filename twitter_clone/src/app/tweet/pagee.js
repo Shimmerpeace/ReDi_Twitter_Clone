@@ -4,7 +4,7 @@ import TweetCard from "@/components/TweetCard";
 import TweetForm from "@/components/TweetForm";
 import Link from "next/link";
 
-export default function TweetsList({ twitterUser, tweetContent }) {
+export default function TweetsList({ twitterUser, content }) {
   const [tweets, setTweets] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -13,7 +13,7 @@ export default function TweetsList({ twitterUser, tweetContent }) {
     fetch("/api/dummyPost", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ twitterUser, tweetContent }),
+      body: JSON.stringify({ twitterUser, content }),
     }) // Fetch from your local proxy/api route
       .then((res) => res.json())
       .then((data) => {
@@ -28,7 +28,7 @@ export default function TweetsList({ twitterUser, tweetContent }) {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [twitterUser, tweetContent ]);
+  }, [twitterUser, content ]);
 
   const fetchTweetsFromDb = async () => {
     try {
@@ -41,18 +41,18 @@ export default function TweetsList({ twitterUser, tweetContent }) {
     }
   };
 
-  const handlePostSubmit = async ({ twitterUser, tweetContent }) => {
+  const handlePostSubmit = async ({ twitterUser, content }) => {
     try {
       const res = await fetch("/api/tweets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ twitterUser, tweetContent }),
+        body: JSON.stringify({ twitterUser, content }),
       });
       if (!res.ok) throw new Error("Failed to post tweet");
       const newTweet = await res.json();
       // Add new tweet to the top of the list
       setTweets((prev) => [newTweet, ...prev]);
-      console.log("New post:", tweetContent);
+      console.log("New post:", content);
     } catch (err) {
       console.error(err);
       alert("Failed to post tweet");

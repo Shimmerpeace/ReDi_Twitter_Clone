@@ -9,54 +9,40 @@ export default function TweetsList() {
   const [tweets, setTweets] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
 
-  // Normalize all tweets to a common shape
+  // Normalize tweet to match display needs
   const normalizeTweet = (tweet) => ({
-    id: tweet.id || tweet._id,
-    title: tweet.title || tweet.tweetContent || "",
-    body: tweet.body || "",
-    tags: tweet.tags || [],
-    reactions:
-      typeof tweet.reactions === "object"
-        ? tweet.reactions
-        : { likes: tweet.reactions || 0, dislikes: 0 },
-    views: tweet.views || 0,
+    id: tweet._id || tweet.id,
+    content: tweet.content || "",
     twitterUser: tweet.twitterUser || "Anonymous",
+    createdAt: tweet.createdAt,
   });
 
-  // Fetch tweets from both sources and merge
+  // Fetch tweets from DB only
   useEffect(() => {
-    const fetchAllTweets = async () => {
+    const fetchTweets = async () => {
       try {
-        // Fetch dummy posts
-        const dummyRes = await fetch("/api/dummyPost", { method: "GET" });
-        const dummyData = await dummyRes.json();
-        const dummyPosts = dummyData.posts.map(normalizeTweet);
-
-        // Fetch DB tweets
         const dbRes = await fetch("/api/tweets");
         const dbJson = await dbRes.json();
-        const dbTweets = (dbJson.data || []).map(normalizeTweet);
-
-        // Merge and set
-        setTweets([...dbTweets, ...dummyPosts]);
+        const dbTweets = (dbJson.tweets || []).map(normalizeTweet);
+        setTweets(dbTweets);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    fetchAllTweets();
+    fetchTweets();
   }, []);
 
   // Handle new tweet submission
-  const handlePostSubmit = async ({ twitterUser, tweetContent }) => {
+  const handlePostSubmit = async ({ content }) => {
     try {
       const res = await fetch("/api/tweets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ twitterUser, tweetContent }),
+        body: JSON.stringify({ content }),
       });
       if (!res.ok) throw new Error("Failed to post tweet");
       const result = await res.json();
-      const newTweet = normalizeTweet(result.data);
+      const newTweet = normalizeTweet(result.tweet);
       setTweets((prev) => [newTweet, ...prev]);
     } catch (err) {
       console.error(err);
