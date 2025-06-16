@@ -23,19 +23,17 @@ export default function Sidebar() {
       <Link href="/user/profile" className="link">
         Communities
       </Link>
-      <Link href="#" className="link">
+      <Link href="/(modal)/user/profile" className="link">
         Profile
       </Link>
       <Link href="#" className="link">
         More
       </Link>
-
-      <Link href="/(modal)/user/profile" className="link">
-        Open My Profile Modal
+      <Link href="/login" className="link">
+        Login
       </Link>
-
-      <Link href="/(modal)/user/profile/1234567890" className="link">
-        Open User 1234567890 Profile Modal
+      <Link href="/signup" className="link">
+        Sign Up
       </Link>
     </div>
   );
