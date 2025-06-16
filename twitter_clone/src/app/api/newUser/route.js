@@ -32,13 +32,3 @@ export async function GET(request) {
     );
   }
 }
-
-/**
-Security: In a real application, you should not store the auth token in the user collection. Instead, use a session or JWT stored in Redis or another secure system.
-
-Mongoose Alternative: If you use Mongoose, replace the native MongoDB queries with your Mongoose model methods.
-
-Database Name: Adjust "nextjs-twitter-clone" to your actual database name.
-
-Environment Variables: Ensure your .env.local includes MONGODB_URI.
-     */

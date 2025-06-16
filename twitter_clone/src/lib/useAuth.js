@@ -69,36 +69,3 @@ export function getUserFromToken(token) {
   return verifyJwt(token);
 }
 
-/*
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-
-const JWT_SECRET = process.env.JWT_SECRET;
-// Password hashing 
-export async function hashPassword(password) {
-  return bcrypt.hash(password, 10);
-}
-// Password verification
-export async function verifyPassword(password, hash) {
-  return bcrypt.compare(password, hash);
-}
-// JWT signing
-export function signJwt(user) {
-  if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
-  return jwt.sign(
-    { id: user._id, username: user.username },
-    JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-}
-// JWT verification with error logging
-export function verifyJwt(token) {
-  try {
-    if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
-    return jwt.verify(token, JWT_SECRET);
-  } catch (error) {
-    console.warn("JWT verification failed:", error.message);
-    return null;
-  }
-}
-  */

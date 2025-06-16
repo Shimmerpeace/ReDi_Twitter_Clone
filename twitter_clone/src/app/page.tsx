@@ -10,18 +10,3 @@ function Home() {
 }
 
 export default Home;
-/*
-import NewTweet from "./newTweet/page";
-import TweetsPage from "@/app/tweets/page";
-
-function Home() {
-  return (
-    <>
-      <NewTweet />
-      <TweetsList />
-      <TweetsPage />
-    </>
-  );
-}
-*/
-//<Header />
