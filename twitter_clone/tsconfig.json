@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/TweetCard.js", "src/components/TweetForm.js", "src/context/AuthContext.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/TweetCard.jsx", "src/components/TweetForm.jsx", "src/context/AuthContext.js"],
   "exclude": ["node_modules"]
 }
