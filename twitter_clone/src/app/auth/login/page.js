@@ -78,7 +78,7 @@ export default function LoginPage() {
           <IoMdCloseCircle />
         </button>
         <div className="form-box login w-full p-10">
-          <h2 className="text-[35px] text-center mb-5">Login</h2>
+          <h2 className="text-[35px] text-center mb-5">ChatMaDay</h2>
           <form onSubmit={handleSubmit}>
             <div className="input-box relative w-full h-[50px] my-7">
               <input

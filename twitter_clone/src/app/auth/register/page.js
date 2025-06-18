@@ -75,7 +75,7 @@ export default function RegisterPage() {
           <IoMdCloseCircle />
         </button>
 
-        <h2 className="text-[35px] text-center mb-5">Register</h2>
+        <h2 className="text-[35px] text-center mb-5">ChatMaDay</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-7">
           <div className="input-box relative w-full h-[50px]">
