@@ -6,8 +6,8 @@ import Tweet from "@/models/Tweet";
 import { verifyJwt } from "@/lib/useAuth";
 
 // Helper to extract user from Authorization header
-function getUserFromRequest(request) {
-  const authHeader = request.headers.get("authorization");
+function getUserFromRequest(req) {
+  const authHeader = req.headers.get("authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return null;
   }
@@ -57,9 +57,11 @@ export async function POST(req) {
       content: content.trim(),
     });
     await tweet.save();
+
+
     return NextResponse.json({ tweet }, { status: 201 });
   } catch (error) {
-    console.error("Error creating tweet:", error);
+    console.log("Error creating tweet:", error);
     return NextResponse.json({ error: "Failed to create tweet" }, { status: 500 });
   }
 }
